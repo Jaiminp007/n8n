@@ -1,0 +1,2391 @@
+{
+    "nodes": [
+      {
+        "parameters": {
+          "content": "# Input of Instagram/Youtube URL - ETL \n",
+          "height": 260,
+          "width": 820,
+          "color": 7
+        },
+        "id": "645e4f37-39a1-4683-b144-d1e72fc2daaa",
+        "name": "Sticky Note10",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -920,
+          680
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=**Task:** Plan a 50-second short-form video from the following transcript by breaking it into 5–6 self-contained segments, each with an example to guide your structure.\n\n**Paraphrase for Originality**\nRewrite each idea in your own words—do not lift phrases from the source.\n**Example:**\nOriginal: “I found a hidden feature in your phone that can supercharge your battery life.”\nParaphrase: “There’s a little-known trick on most smartphones that can give you hours of extra power.”\n\n**Segment Division**\nSplit the transcript into 5–6 clear “beats” or ideas that flow as a single narrative.\n**Example Segments:**\n\n* **Opening Hook**\n  Text: “What if I told you your phone’s charging habits are all wrong?”\n  Visual: Video: Speaker on Camera\n\n* **Problem Statement**\n  Text: “Most of us plug in our devices overnight, but that can wear down the battery fast.”\n  Visual: B-roll\n  Image Prompt: “Close-up of a smartphone battery icon with a speedometer overlay”\n\n* **Key Insight**\n  Text: “A simple setting adjustment can cut charging time in half.”\n  Visual: Video: Speaker on Camera\n\n* **How-To Tip**\n  Text: “Head into Settings → Battery → Optimized Charging and flip it on.”\n  Visual: B-roll\n  Image Prompt: “Side-by-side comparison of two battery health gauges, one higher than the other”\n\n* **Benefit Reminder**\n  Text: “You’ll get longer battery life and fewer replacements down the road.”\n  Visual: B-roll\n  Image Prompt: “Happy person using phone all day with a full battery icon”\n\n**Visual Assignment**\nUse Video: Speaker on Camera for roughly 50–60% of your segments.\nUse B-roll for at least 3 segments to illustrate key points.\n**Use B-roll with image prompts on segments 2, 3, and 4 only, and ensure there are exactly 6 segments in total.**\n\n**Output Format**\nList the final segments in order (no durations). For each segment include:\n\n* **Text:** Your paraphrased narration.\n* **Visual:** “Video: Speaker on Camera” or “B-roll.”\n* If “B-roll,” add **Image Prompt:** a short AI-art description.\n* **Give me a title of the video.**\n\n\nTranscript:\n{{ $json.Transcript }}",
+          "hasOutputParser": true,
+          "options": {
+            "systemMessage": "="
+          }
+        },
+        "id": "f6cdc423-4d62-4bde-8eb5-74b4ee17efe3",
+        "name": "Video Editor",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "position": [
+          1540,
+          740
+        ],
+        "retryOnFail": true,
+        "typeVersion": 1.7
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=You’ll receive a single JSON object under variable `input`, with:\n\n- `video_title`: the full title of the video\n- `segments`: an array of segment objects\n\nEach segment object has at least these keys:\n- segment_number\n- text\n- visual\n\nYour task is to output the same object, with no changes to ordering or structure *except* that for each segment you add two new properties immediately after `\"text\"`:\n\n1. `\"text_spanish\"`: the Spanish translation of the original `\"text\"`.\n2. `\"text_arabic\"`: the Arabic translation of the original `\"text\"`.\n\nDo NOT modify, remove, rename, or reorder any other keys or values. Output must be valid JSON only.\n\n\nHere is the JSON input:\n{{ JSON.stringify($json.output, null, 2) }}\n",
+          "hasOutputParser": true,
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.8,
+        "position": [
+          1980,
+          740
+        ],
+        "id": "a9440094-bd32-4333-8a9f-c282353c4559",
+        "name": "Translator"
+      },
+      {
+        "parameters": {
+          "resource": "video",
+          "operation": "upload",
+          "title": "=test #Shorts",
+          "regionCode": "IN",
+          "categoryId": "24",
+          "options": {
+            "defaultLanguage": "en",
+            "description": "test",
+            "privacyStatus": "public",
+            "selfDeclaredMadeForKids": false
+          }
+        },
+        "type": "n8n-nodes-base.youTube",
+        "typeVersion": 1,
+        "position": [
+          3660,
+          1920
+        ],
+        "id": "2ccca172-9a2b-4f43-8360-45d6daedb35f",
+        "name": "YouTube",
+        "credentials": {
+          "youTubeOAuth2Api": {
+            "id": "mcGHAucEWIX5KopE",
+            "name": "YouTube account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 1399770913,
+            "mode": "list",
+            "cachedResultName": "Form responses 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ/edit#gid=1399770913"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "Transcript"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          -620,
+          780
+        ],
+        "id": "767b552f-63b1-4902-a17e-a36dcb95e132",
+        "name": "Extracting Video urls",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "99UeR4t8vxrUhLeI",
+            "name": "Brainsnacks"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.URL }}",
+                      "rightValue": "/youtube\\.com|youtu\\.be/",
+                      "operator": {
+                        "type": "string",
+                        "operation": "regex"
+                      },
+                      "id": "492a9c73-18f4-4386-b186-235e96ce59c6"
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "ef8d9701-2f87-4d6f-87b7-324cd375df3a",
+                      "leftValue": "={{ $json.URL }}",
+                      "rightValue": "/instagram\\.com/",
+                      "operator": {
+                        "type": "string",
+                        "operation": "regex"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "73ecbf85-a34c-474c-ad3f-0b72d540f785",
+                      "leftValue": "",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -360,
+          780
+        ],
+        "id": "0d4ee1e9-d46f-4ad0-a936-f2109789c381",
+        "name": "Switch"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.openai.com/v1/audio/transcriptions",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer Your_OpenAI_Key"
+              }
+            ]
+          },
+          "sendBody": true,
+          "contentType": "multipart-form-data",
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "model",
+                "value": "whisper-1"
+              },
+              {
+                "name": "response_format",
+                "value": "text"
+              },
+              {
+                "name": "language",
+                "value": "en"
+              },
+              {
+                "parameterType": "formBinaryData",
+                "name": "file",
+                "inputDataFieldName": "audio"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          660,
+          960
+        ],
+        "id": "fd215fdd-4098-4088-becb-39750e53acf4",
+        "name": "Send to Wishper"
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "/trigger-link",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          -840,
+          780
+        ],
+        "id": "93ed613a-a3f6-496f-984c-4d324827310d",
+        "name": "Webhook",
+        "webhookId": "c92ddf70-349f-4e36-ab02-69ecfbb98a70"
+      },
+      {
+        "parameters": {
+          "content": "# Youtube Transcription\n",
+          "height": 260,
+          "width": 1240,
+          "color": 4
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          0,
+          460
+        ],
+        "id": "f77d2acd-eec1-4a10-be7d-f344cbf5454f",
+        "name": "Sticky Note2"
+      },
+      {
+        "parameters": {
+          "content": "# Instagram Transcription\n",
+          "height": 260,
+          "width": 1020,
+          "color": 4
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          0,
+          880
+        ],
+        "id": "cf52de0e-aa86-44b0-a23a-bb2bcd1c9b5f",
+        "name": "Sticky Note3"
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.video_url }}",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file",
+                "outputPropertyName": "audio"
+              }
+            }
+          }
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          460,
+          960
+        ],
+        "id": "a484de8a-07a8-49e2-a7ba-66692e7b569a",
+        "name": "Download Audio"
+      },
+      {
+        "parameters": {
+          "jsCode": "return items.map(item => {\n  // Get the dynamic URL from each item\n  const url = item.json.URL;\n\n  // Function to extract the YouTube video ID\n  function extractYouTubeId(url) {\n    const regex =\n      /(?:https?:\\/\\/)?(?:www\\.)?(?:youtube\\.com\\/(?:watch\\?(?:.*&)?v=|shorts\\/|embed\\/)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})/;\n    const match = url.match(regex);\n    return match ? match[1] : null;\n  }\n\n  // Extract and add the videoId to the item's JSON data\n  item.json.videoId = extractYouTubeId(url);\n\n  // Return the modified item\n  return item;\n});\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          60,
+          540
+        ],
+        "id": "44047205-e2fe-476c-ac91-77b1f0b0690e",
+        "name": "Extract YouTube ID"
+      },
+      {
+        "parameters": {
+          "executeOnce": false,
+          "command": "=yt-dlp -x --audio-format mp3 -o \"/Users/jaiminpatel/Downloads/{{ $json.videoId }}.%(ext)s\" \"{{ $('Extract YouTube ID').item.json.URL }}\"\n"
+        },
+        "type": "n8n-nodes-base.executeCommand",
+        "typeVersion": 1,
+        "position": [
+          260,
+          540
+        ],
+        "id": "f9a168a6-9064-4473-87b5-7c1351629338",
+        "name": "Download Video"
+      },
+      {
+        "parameters": {
+          "amount": 30
+        },
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          480,
+          540
+        ],
+        "id": "3a2ca086-db7a-4fa1-b881-35ca9f059404",
+        "name": "30s",
+        "webhookId": "204b56d3-add5-468b-aed5-2e37bdda45ea"
+      },
+      {
+        "parameters": {
+          "fileSelector": "=/Users/jaiminpatel/Downloads/{{ $('Extract YouTube ID').item.json.videoId }}.mp3",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.readWriteFile",
+        "typeVersion": 1,
+        "position": [
+          680,
+          540
+        ],
+        "id": "ced6eeae-cf5b-43e8-9f11-55955990a5fc",
+        "name": "Extract Audio ",
+        "alwaysOutputData": true
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.openai.com/v1/audio/transcriptions",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer Your_OpenAI_Key"
+              }
+            ]
+          },
+          "sendBody": true,
+          "contentType": "multipart-form-data",
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "model",
+                "value": "whisper-1"
+              },
+              {
+                "name": "response_format",
+                "value": "text"
+              },
+              {
+                "name": "language",
+                "value": "en"
+              },
+              {
+                "parameterType": "formBinaryData",
+                "name": "file",
+                "inputDataFieldName": "data"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          900,
+          540
+        ],
+        "id": "e18c4d31-5aea-448c-8a86-d29b16d7ef3e",
+        "name": "Send to wishper"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "documentId": {
+            "__rl": true,
+            "value": "1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 1399770913,
+            "mode": "list",
+            "cachedResultName": "Form responses 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ/edit#gid=1399770913"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Transcript": "={{ $json.data }}",
+              "row_number": "={{ $('Switch').item.json.row_number }}"
+            },
+            "matchingColumns": [
+              "row_number"
+            ],
+            "schema": [
+              {
+                "id": "URL",
+                "displayName": "URL",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Transcript",
+                "displayName": "Transcript",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Caption",
+                "displayName": "Caption",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "row_number",
+                "displayName": "row_number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "readOnly": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          1080,
+          540
+        ],
+        "id": "e8f20f62-3eec-4c50-b870-b5a67c2399c9",
+        "name": "Upload Transcript/Description",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "99UeR4t8vxrUhLeI",
+            "name": "Brainsnacks"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const results = [];\nconst inputData = $input.first().json.output.segments;  // Adjust this if your JSON is different\n\nif (Array.isArray(inputData)) {\n  inputData.forEach(segment => {\n    const bRollSuggestion = segment.visual && segment.visual.b_roll_suggestion !== undefined \n        ? segment.visual.b_roll_suggestion \n        : \"\";\n\n    results.push({\n      json: {\n        \"Segment Number\": segment.segment_number,\n        \"Text (en)\": segment.text || \"\",\n        \"Spanish Text\": segment.text_spanish || \"\",\n        \"Arabic Text\": segment.text_arabic || \"\",\n        \"Visual Type\": (segment.visual && segment.visual.type) || \"\",\n        \"B-Roll Suggestion\": bRollSuggestion\n      }\n    });\n  });\n}\n\nreturn results;"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          2480,
+          920
+        ],
+        "id": "85f0cad9-29d3-4bc1-80dd-82598bd926b7",
+        "name": "Extract Segment Data"
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Segments",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "VideoID": "={{ $json.data[0].id }}",
+              "VideoTitle": "={{ $json.data[0].title }}",
+              "SegementNumber": "={{ $('Extract Segment Data').item.json['Segment Number'] }}",
+              "Text(en)": "={{ $('Extract Segment Data').item.json['Text (en)'] }}",
+              "Spanish": "={{ $('Extract Segment Data').item.json['Spanish Text'] }}",
+              "Arabic": "={{ $('Extract Segment Data').item.json['Arabic Text'] }}",
+              "VisualType": "={{ $('Extract Segment Data').item.json['Visual Type'] }}",
+              "BrollContent": "={{ $('Extract Segment Data').item.json['B-Roll Suggestion'].content }}",
+              "BrollFormat": "={{ $('Extract Segment Data').item.json['B-Roll Suggestion'].format }}",
+              "VideoID_SegmentNumber": "={{ $json.data[0].id }}-{{ $('Extract Segment Data').item.json['Segment Number'] }}"
+            },
+            "matchingColumns": [
+              "VideoID"
+            ],
+            "schema": [
+              {
+                "id": "VideoID",
+                "displayName": "VideoID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "VideoTitle",
+                "displayName": "VideoTitle",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "SegementNumber",
+                "displayName": "SegementNumber",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Text(en)",
+                "displayName": "Text(en)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Spanish",
+                "displayName": "Spanish",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Arabic",
+                "displayName": "Arabic",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "VisualType",
+                "displayName": "VisualType",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "BrollContent",
+                "displayName": "BrollContent",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "BrollFormat",
+                "displayName": "BrollFormat",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Image",
+                "displayName": "Image",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Video",
+                "displayName": "Video",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "VideoID_SegmentNumber",
+                "displayName": "VideoID_SegmentNumber",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          3000,
+          1140
+        ],
+        "id": "71006b97-5940-4a9a-856e-1f61477d89e2",
+        "name": "Upload Segments",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "99UeR4t8vxrUhLeI",
+            "name": "Brainsnacks"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "url": "https://real-time-instagram-scraper-api1.p.rapidapi.com/v1/media_info_web",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "code_or_id_or_url",
+                "value": "={{ $json.URL }}"
+              }
+            ]
+          },
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-Rapidapi-Key",
+                "value": "c4c18c2912msh80cf32d2f35c0fcp132bdcjsn7d276abf960e"
+              },
+              {
+                "name": "X-Rapidapi-Host",
+                "value": "real-time-instagram-scraper-api1.p.rapidapi.com"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          60,
+          960
+        ],
+        "id": "8e59f693-fa91-4add-ace3-6520c59e10a7",
+        "name": "Get Insta Details"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "9c3c304d-cc66-4d15-a3b2-bb8d134f20ee",
+                "name": "caption",
+                "value": "={{ $json.data.edge_media_to_caption.edges[0].node.text }}",
+                "type": "string"
+              },
+              {
+                "id": "6e404d8f-aa8a-4a0d-b90d-8553e548a833",
+                "name": "video_url",
+                "value": "={{ $json.data.video_url }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          260,
+          960
+        ],
+        "id": "8e9ccce1-12e4-49ad-ab2c-b7acc0e94667",
+        "name": "Get Caption"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "documentId": {
+            "__rl": true,
+            "value": "1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 1399770913,
+            "mode": "list",
+            "cachedResultName": "Form responses 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ/edit#gid=1399770913"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Transcript": "={{ $json.data }}",
+              "Caption": "={{ $('Download Audio').item.json.caption }}",
+              "row_number": "={{ $('Switch').item.json.row_number }}"
+            },
+            "matchingColumns": [
+              "row_number"
+            ],
+            "schema": [
+              {
+                "id": "Timestamp",
+                "displayName": "Timestamp",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "URL",
+                "displayName": "URL",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Transcript",
+                "displayName": "Transcript",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Caption",
+                "displayName": "Caption",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "row_number",
+                "displayName": "row_number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "readOnly": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          860,
+          960
+        ],
+        "id": "42803fff-ceef-4b7e-a93c-21ad85de30c0",
+        "name": "Upload Caption/Description",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "99UeR4t8vxrUhLeI",
+            "name": "Brainsnacks"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "loose",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "5f72a3a2-9e7a-49f7-bbaa-1a643f1cf901",
+                "leftValue": "={{ $('Upload Segments').item.json.VisualType }}",
+                "rightValue": "b_roll",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "looseTypeValidation": true,
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -1180,
+          1920
+        ],
+        "id": "23b45a92-9f47-4d9f-ac22-9f3ffa3abc6a",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "57d59e9b-f6e9-4c0a-aac7-e3dbd765118d",
+                "name": "data[0].id",
+                "value": "={{ $('Extract YouTube ID').item.json.videoId }}",
+                "type": "string"
+              },
+              {
+                "id": "e314cfe2-d154-44c7-ab2b-599dc63f55d2",
+                "name": "data[0].title",
+                "value": "={{ $('Translator').item.json.output.video_title }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          2740,
+          1040
+        ],
+        "id": "ec4a14b7-321e-4121-bcba-efb657ec6a41",
+        "name": "Edit Fields2"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=You are an expert image-generation prompt engineer.  \nGiven:\n- A concise image description: {{ $json.BrollContent }}\n- A thematic overlay or caption concept:\n{{ $json['Text(en)'] }}\n\nTask:\nExpand these inputs into one vivid, cohesive prompt that:\n1. Transforms the short description into a realistic, imaginative scene with clear context, mood, lighting, camera angle, and environment.  \n2. Seamlessly weaves in the theme or emotion of the overlay text (without embedding the literal text) to guide the atmosphere.  \n3. Specifies any desired art style or level of realism (e.g., “photo-realistic,” “cinematic lighting,” “wide-angle shot”).  \n4. Optimizes for the `gpt-image-1` API by providing unambiguous visual directives.\n5. Dont add the doouble quotes or single quotes in the prompts\n\nOutput:\nReturn only the final, enhanced prompt as a single, fluent sentence.",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.8,
+        "position": [
+          -700,
+          1600
+        ],
+        "id": "bad00921-671d-4830-a9d6-380579bbf55e",
+        "name": "Image Promptor"
+      },
+      {
+        "parameters": {
+          "sendTo": "example@gmail.com",
+          "subject": "Your Video Is Uploaded",
+          "emailType": "text",
+          "message": "=Title:  {{ $('Combine Segments').item.json.video_inputs[0].VideoTitle }}\n\nVideo is uploaded on channel BrainSnacks",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.1,
+        "position": [
+          3860,
+          1920
+        ],
+        "id": "c06c6589-abea-4511-bebc-60781a03b3ae",
+        "name": "Gmail",
+        "webhookId": "f205b2a1-8315-46c3-a8f4-3e33cbe19399",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "O7iTp82IxqL8w2CB",
+            "name": "Gmail account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "# AI Script Generator\nAdd your open ai credentials in model below",
+          "height": 800,
+          "width": 1820,
+          "color": 5
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          1380,
+          600
+        ],
+        "id": "4805b9a2-264d-4541-bec8-df3bb196a5b7",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4-turbo-2024-04-09",
+            "mode": "list",
+            "cachedResultName": "gpt-4-turbo-2024-04-09"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          1500,
+          920
+        ],
+        "id": "ce903bb7-e2bd-45bb-914a-33db745a0840",
+        "name": "Video Editor Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "9Fy0ntwzjvJgcerk",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "schemaType": "manual",
+          "inputSchema": "{\n  \"title\": \"Full Video Plan\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"video_title\": {\n      \"description\": \"The full title of the video.\",\n      \"type\": \"string\"\n    },\n    \"segments\": {\n      \"description\": \"List of structured video segments.\",\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"segment_number\": {\n            \"type\": \"integer\",\n            \"minimum\": 1\n          },\n          \"text\": {\n            \"type\": \"string\"\n          },\n          \"visual\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"type\": {\n                \"type\": \"string\",\n                \"enum\": [\"speaker_on_camera\", \"b_roll\"]\n              },\n              \"b_roll_suggestion\": {\n                \"type\": \"object\",\n                \"properties\": {\n                  \"content\": {\n                    \"type\": [\"string\", \"null\"]\n                  },\n                  \"format\": {\n                    \"type\": [\"string\", \"null\"],\n                    \"enum\": [\"image\", \"null\"]\n                  }\n                },\n                \"required\": [\"content\", \"format\"],\n                \"additionalProperties\": false\n              }\n            },\n            \"required\": [\"type\", \"b_roll_suggestion\"],\n            \"additionalProperties\": false\n          }\n        },\n        \"required\": [\"segment_number\", \"text\", \"visual\"],\n        \"additionalProperties\": false\n      }\n    }\n  },\n  \"required\": [\"video_title\", \"segments\"],\n  \"additionalProperties\": false\n}\n"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.2,
+        "position": [
+          1720,
+          940
+        ],
+        "id": "786f7375-400c-4758-9f57-1f68cd03dccc",
+        "name": "Structured Output"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4o-mini"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          1960,
+          920
+        ],
+        "id": "020ac77c-8742-4373-8269-345eb8f110a0",
+        "name": "Transcription Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "9Fy0ntwzjvJgcerk",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "schemaType": "manual",
+          "inputSchema": "{\n  \"title\": \"Translated Video Segment Plan\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"video_title\": {\n      \"type\": \"string\",\n      \"description\": \"The full title of the video.\"\n    },\n    \"segments\": {\n      \"type\": \"array\",\n      \"description\": \"Array of video segments, each enriched with translations and visuals.\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"segment_number\": {\n            \"type\": \"integer\",\n            \"minimum\": 1,\n            \"description\": \"Sequential index of this segment.\"\n          },\n          \"text\": {\n            \"type\": \"string\",\n            \"description\": \"Original transcript text.\"\n          },\n          \"text_spanish\": {\n            \"type\": \"string\",\n            \"description\": \"Spanish translation of the text.\"\n          },\n          \"text_arabic\": {\n            \"type\": \"string\",\n            \"description\": \"Arabic translation of the text.\"\n          },\n          \"visual\": {\n            \"type\": \"object\",\n            \"description\": \"Metadata for on-screen visuals or B-roll.\",\n            \"properties\": {\n              \"type\": {\n                \"type\": \"string\",\n                \"enum\": [\"speaker_on_camera\", \"b_roll\"],\n                \"description\": \"Whether this is the speaker on camera or B-roll.\"\n              },\n              \"b_roll_suggestion\": {\n                \"type\": \"object\",\n                \"description\": \"Details for B-roll; null fields when type is speaker_on_camera.\",\n                \"properties\": {\n                  \"content\": {\n                    \"type\": [\"string\", \"null\"],\n                    \"description\": \"Description of B-roll footage or null.\"\n                  },\n                  \"format\": {\n                    \"type\": [\"string\", \"null\"],\n                    \"enum\": [\"image\", \"video\", \"null\"],\n                    \"description\": \"Either 'image'/'video' for B-roll or 'null'.\"\n                  }\n                },\n                \"required\": [\"content\", \"format\"],\n                \"additionalProperties\": false\n              }\n            },\n            \"required\": [\"type\", \"b_roll_suggestion\"],\n            \"additionalProperties\": false\n          }\n        },\n        \"required\": [\n          \"segment_number\",\n          \"text\",\n          \"text_spanish\",\n          \"text_arabic\",\n          \"visual\"\n        ],\n        \"additionalProperties\": false\n      }\n    }\n  },\n  \"required\": [\"video_title\", \"segments\"],\n  \"additionalProperties\": false\n}\n"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.2,
+        "position": [
+          2200,
+          940
+        ],
+        "id": "1055747f-a87b-4730-b764-4b8c29fc64ed",
+        "name": "Structured_Output"
+      },
+      {
+        "parameters": {
+          "content": "#      Image Generation\nThis would generate a very proper image for YT video",
+          "height": 640,
+          "width": 1900,
+          "color": 5
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          -1400,
+          1460
+        ],
+        "id": "ffa77c5a-25b5-40b3-bab0-7cdbc404167f",
+        "name": "Sticky Note4"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Step 1: Retrieve the video title from the first item\nconst title = $input.first().json.VideoTitle; // Replace with your actual title variable\n\n// Function to remove emojis and special characters\nfunction sanitizeTitle(title) {\n  // Remove emojis using a regular expression\n  const removeEmojis = title.replace(/[\\u{1F600}-\\u{1F64F}\\u{1F300}-\\u{1F5FF}\\u{1F680}-\\u{1F6FF}\\u{1F700}-\\u{1F77F}\\u{1F780}-\\u{1F7FF}\\u{1F800}-\\u{1F8FF}\\u{1F900}-\\u{1F9FF}\\u{1FA00}-\\u{1FA6F}\\u{1FA70}-\\u{1FAFF}\\u{2600}-\\u{26FF}\\u{2700}-\\u{27BF}\\u{2300}-\\u{23FF}\\u{2B50}\\u{FE0F}\\u{1F004}-\\u{1F0CF}]/gu, '');\n\n  // Remove special characters and spaces, leaving only alphanumeric characters and underscores\n  const sanitizedTitle = removeEmojis.replace(/[^a-zA-Z0-9_]/g, '_');\n\n  return sanitizedTitle;\n}\n\n// Step 2: Sanitize the video title\nconst sanitizedTitle = sanitizeTitle(title);\n\n// Step 3: Process all binary files and assign them to the sanitized folder\nreturn items.map(item => {\n  // Get segment number (or default to 'Unknown' if not available)\n  const segment = item.json.SegementNumber || 'Unknown';\n  \n  // Create the file name (e.g., \"1.mp4\", \"2.mp4\", etc.)\n  const fileName = `${segment}.mp4`;\n  \n  // Set the folder path using the sanitized title\n  const folderPath = sanitizedTitle;\n  \n  // Construct the full path where the file will be stored\n  const fullPath = `/Users/jaiminpatel/Desktop/Storage/${folderPath}/${fileName}`;\n\n  // Return the file path, sanitized title, and binary data\n  return {\n    json: {\n      filePath: fullPath,\n      sanitizedTitle: sanitizedTitle  // Include sanitized title in the output\n    },\n    binary: {\n      renamed_file: item.binary?.data // Adjust this to match your binary key\n    }\n  };\n});\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -1360,
+          1920
+        ],
+        "id": "49079cf7-117f-4076-bf81-42132cd9b906",
+        "name": "Clean Title Path"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "b9c18602-c98d-4978-bb86-26bf149c0adf",
+                "name": "BrollContent",
+                "value": "={{ $('Upload Segments').item.json.BrollContent }}",
+                "type": "string"
+              },
+              {
+                "id": "664e9fd2-a7f3-416c-802c-309ff0311a2e",
+                "name": "SegementNumber",
+                "value": "={{ $('Upload Segments').item.json.SegementNumber }}",
+                "type": "number"
+              },
+              {
+                "id": "d9917369-8e66-415d-96dc-4537ff72cb83",
+                "name": "Text(en)",
+                "value": "={{ $('Upload Segments').item.json['Text(en)'] }}",
+                "type": "string"
+              },
+              {
+                "id": "2a38f159-b71e-47db-ba72-7c3731905fe8",
+                "name": "VideoID",
+                "value": "={{ $('Upload Segments').item.json.VideoID }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -920,
+          1600
+        ],
+        "id": "e247d8e9-15d2-44f1-947c-44cd1aa430d4",
+        "name": "Map Segment Fields"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4-turbo",
+            "mode": "list",
+            "cachedResultName": "gpt-4-turbo"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          -720,
+          1800
+        ],
+        "id": "cd1347df-9a7c-4419-8126-9b1de5d1aea3",
+        "name": "Image Prompter Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "9Fy0ntwzjvJgcerk",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.openai.com/v1/images/generations",
+          "sendHeaders": true,
+          "specifyHeaders": "json",
+          "jsonHeaders": "{\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer Your_OpenAI_Key\"\n}\n",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"model\": \"dall-e-3\",\n  \"prompt\": \"{{ $json.output }}\",\n  \"n\": 1,\n  \"size\": \"1792x1024\"\n}\n",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -340,
+          1600
+        ],
+        "id": "233daaec-ab52-4f88-b182-dbe6fb656a01",
+        "name": "DALL.E Request"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "262f2e77-a1bb-4339-b033-f9c236b5384e",
+                "name": "data[0].url",
+                "value": "={{ $json.data[0].url }}",
+                "type": "string"
+              },
+              {
+                "id": "8dff1ffb-e85f-43bc-af51-216b5727bf41",
+                "name": "SegementNumber",
+                "value": "={{ $('Map Segment Fields').item.json.SegementNumber }}",
+                "type": "number"
+              },
+              {
+                "id": "18ae90de-27bd-4b16-afa6-ecc7dde78d6a",
+                "name": "VideoID",
+                "value": "={{ $('Map Segment Fields').item.json.VideoID }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -140,
+          1600
+        ],
+        "id": "1405bfa5-78cf-4313-91a6-26826639cf25",
+        "name": "Set Video Fields"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "documentId": {
+            "__rl": true,
+            "value": "1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Segments",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Image": "={{ $json.data[0].url }}",
+              "VideoID_SegmentNumber": "={{ $json.VideoID }}-{{ $json.SegementNumber }}"
+            },
+            "matchingColumns": [
+              "VideoID_SegmentNumber"
+            ],
+            "schema": [
+              {
+                "id": "VideoID",
+                "displayName": "VideoID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "VideoTitle",
+                "displayName": "VideoTitle",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "SegementNumber",
+                "displayName": "SegementNumber",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Text(en)",
+                "displayName": "Text(en)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Spanish",
+                "displayName": "Spanish",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Arabic",
+                "displayName": "Arabic",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "VisualType",
+                "displayName": "VisualType",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "BrollContent",
+                "displayName": "BrollContent",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "BrollFormat",
+                "displayName": "BrollFormat",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Image",
+                "displayName": "Image",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Video",
+                "displayName": "Video",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "VideoID_SegmentNumber",
+                "displayName": "VideoID_SegmentNumber",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "row_number",
+                "displayName": "row_number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "readOnly": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          40,
+          1600
+        ],
+        "id": "23547a40-c601-4abe-87aa-1d10fb2217d1",
+        "name": "Upload Image",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "99UeR4t8vxrUhLeI",
+            "name": "Brainsnacks"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.1,
+        "position": [
+          340,
+          1920
+        ],
+        "id": "53b4e049-5b11-4102-8fed-4cfe173354c1",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "content": "## Hey Gen Request\nThis will send a request to hey gen to create a video with AI avatar\n",
+          "height": 300,
+          "width": 1120,
+          "color": 6
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          760,
+          1800
+        ],
+        "id": "3c3658a1-7b8d-451c-aa0f-af61df1187c3",
+        "name": "Sticky Note5"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "e88809d1-7403-4051-8603-d315b7c95d9e",
+                "name": "Image",
+                "value": "={{ $json.Image }}",
+                "type": "string"
+              },
+              {
+                "id": "1cd86cbf-f568-4606-a9c8-1ac2085cd078",
+                "name": "VideoTitle",
+                "value": "={{ $('Upload Segments').item.json.VideoTitle }}",
+                "type": "string"
+              },
+              {
+                "id": "53b2f3f4-8cd2-4339-af37-0b8144bd1fb2",
+                "name": "Text(en)",
+                "value": "={{ $('Upload Segments').item.json['Text(en)'] }}",
+                "type": "string"
+              },
+              {
+                "id": "1aacb464-7947-4b6e-a864-4ee3a8d0d169",
+                "name": "VisualType",
+                "value": "={{ $('Upload Segments').item.json.VisualType }}",
+                "type": "string"
+              },
+              {
+                "id": "c79a521f-4ea3-4b0f-b345-7ec6f9fe7f3d",
+                "name": "SegementNumber",
+                "value": "={{ $('Upload Segments').item.json.SegementNumber }}",
+                "type": "number"
+              },
+              {
+                "id": "8df34b1d-71e0-4d61-85e6-f3bba08e2afb",
+                "name": "VideoID",
+                "value": "={{ $('Upload Segments').item.json.VideoID }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          820,
+          1920
+        ],
+        "id": "f08d4223-46ee-4872-a2b3-a446d470ad56",
+        "name": "Field Mapper"
+      },
+      {
+        "parameters": {
+          "jsCode": "// n8n Function node code\n\n// 1. Pull out the raw JSON of each incoming item\nconst allSegments = items.map(item => item.json);\n\n// 2. Build a single combined item\nconst combined = {\n  video_inputs: allSegments\n};\n\n// 3. Return it as one item\nreturn [\n  {\n    json: combined\n  }\n];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1000,
+          1920
+        ],
+        "id": "b126850b-220e-412d-98a3-d4a3a4815757",
+        "name": "Combine Segments"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.heygen.com/v2/video/generate",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-Api-Key",
+                "value": "ODUzMzBkZWE5NjYwNGFmZjg0NTZiNDVjZTkwM2QyZDgtMTc0NTIxNjQyMA=="
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"title\": \"{{ $json.video_inputs[0].VideoTitle }}\",\n  \"caption\": false,\n  \"video_inputs\": [\n    {\n      \"character\": {\n        \"type\": \"avatar\",\n        \"avatar_id\": \"Daisy-inskirt-20220818\",\n        \"scale\": 1.0,\n        \"avatar_style\": \"normal\"\n      },\n      \"voice\": {\n        \"type\": \"text\",\n        \"voice_id\": \"2d5b0e6cf36f460aa7fc47e3eee4ba54\",\n        \"input_text\": \"{{ $json.video_inputs[3]['Text(en)'] }}\"\n      }\n    },\n    {\n      \"voice\": {\n        \"type\": \"text\",\n        \"voice_id\": \"2d5b0e6cf36f460aa7fc47e3eee4ba54\",\n        \"input_text\": \"{{ $json.video_inputs[0]['Text(en)'] }}\"\n      },\n      \"background\": {\n        \"type\": \"image\",\n        \"url\": \"{{ $json.video_inputs[0].Image }}\",\n        \"fit\": \"cover\"\n      }\n    },\n    {\n      \"voice\": {\n        \"type\": \"text\",\n        \"voice_id\": \"2d5b0e6cf36f460aa7fc47e3eee4ba54\",\n        \"input_text\": \"{{ $json.video_inputs[1]['Text(en)'] }}\"\n      },\n      \"background\": {\n        \"type\": \"image\",\n        \"url\": \"{{ $json.video_inputs[1].Image }}\",\n        \"fit\": \"cover\"\n      }\n    },\n    {\n      \"voice\": {\n        \"type\": \"text\",\n        \"voice_id\": \"2d5b0e6cf36f460aa7fc47e3eee4ba54\",\n        \"input_text\": \"{{ $json.video_inputs[2]['Text(en)'] }}\"\n      },\n      \"background\": {\n        \"type\": \"image\",\n        \"url\": \"{{ $json.video_inputs[2].Image }}\",\n        \"fit\": \"cover\"\n      }\n    },\n    {\n      \"character\": {\n        \"type\": \"avatar\",\n        \"avatar_id\": \"Daisy-inskirt-20220818\",\n        \"scale\": 1.0,\n        \"avatar_style\": \"normal\"\n      },\n      \"voice\": {\n        \"type\": \"text\",\n        \"voice_id\": \"2d5b0e6cf36f460aa7fc47e3eee4ba54\",\n        \"input_text\": \"{{ $json.video_inputs[4]['Text(en)'] }}\"\n      }\n    },\n    {\n      \"character\": {\n        \"type\": \"avatar\",\n        \"avatar_id\": \"Daisy-inskirt-20220818\",\n        \"scale\": 1.0,\n        \"avatar_style\": \"normal\"\n      },\n      \"voice\": {\n        \"type\": \"text\",\n        \"voice_id\": \"2d5b0e6cf36f460aa7fc47e3eee4ba54\",\n        \"input_text\": \"{{ $json.video_inputs[5]['Text(en)'] }}\"\n      }\n    }\n  ],\n  \"dimension\": {\n    \"width\": 1280,\n    \"height\": 720\n  }\n}\n",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1180,
+          1920
+        ],
+        "id": "7d29d784-1283-4b25-abea-5277aef4bcce",
+        "name": "Sending Request"
+      },
+      {
+        "parameters": {
+          "amount": 10,
+          "unit": "minutes"
+        },
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          1360,
+          1920
+        ],
+        "id": "cadfd69d-ad27-4b43-ac06-fc3834488793",
+        "name": "10 min",
+        "webhookId": "204b56d3-add5-468b-aed5-2e37bdda45ea"
+      },
+      {
+        "parameters": {
+          "url": "=https://api.heygen.com/v1/video_status.get?video_id={{ $json.data.video_id }}",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-Api-Key",
+                "value": "ODUzMzBkZWE5NjYwNGFmZjg0NTZiNDVjZTkwM2QyZDgtMTc0NTIxNjQyMA=="
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1540,
+          1920
+        ],
+        "id": "a57a0327-233b-4de7-91bf-a76b56c899cd",
+        "name": "Getting Video"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "documentId": {
+            "__rl": true,
+            "value": "1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Segments",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cf1zeX2QHtvb46gixM-5Ucv-2h-CYERq7C7sjmsvweQ/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "VideoID": "={{ $('Combine Segments').item.json.video_inputs[0].VideoID }}",
+              "Video": "={{ $json.data.video_url }}"
+            },
+            "matchingColumns": [
+              "VideoID"
+            ],
+            "schema": [
+              {
+                "id": "VideoID",
+                "displayName": "VideoID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "VideoTitle",
+                "displayName": "VideoTitle",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "SegementNumber",
+                "displayName": "SegementNumber",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Text(en)",
+                "displayName": "Text(en)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Spanish",
+                "displayName": "Spanish",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Arabic",
+                "displayName": "Arabic",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "VisualType",
+                "displayName": "VisualType",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "BrollContent",
+                "displayName": "BrollContent",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "BrollFormat",
+                "displayName": "BrollFormat",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Image",
+                "displayName": "Image",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Video",
+                "displayName": "Video",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "VideoID_SegmentNumber",
+                "displayName": "VideoID_SegmentNumber",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "row_number",
+                "displayName": "row_number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "readOnly": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          1720,
+          1920
+        ],
+        "id": "36e92eaf-6cfc-4e03-b5df-85e3c120bfd8",
+        "name": "Upload Video",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "99UeR4t8vxrUhLeI",
+            "name": "Brainsnacks"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "## Create Video\nThis would create the final video with subway surfer gameplay in the bottom",
+          "height": 320,
+          "width": 1020,
+          "color": 2
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          2200,
+          1780
+        ],
+        "id": "cd6dfbb7-af12-4c8f-b702-16ed57edef69",
+        "name": "Sticky Note6"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "43d1fbf8-2776-4397-85f2-7b07c711c0e1",
+                "name": "data.video_url",
+                "value": "={{ $json.Video }}",
+                "type": "string"
+              },
+              {
+                "id": "e87f27e2-7587-4ab7-b192-415560fafce0",
+                "name": "VideoID",
+                "value": "={{ $json.VideoID }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          2260,
+          1920
+        ],
+        "id": "ecedee72-32de-4ada-8396-a7a76c8a3584",
+        "name": "Set Video Data"
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.data.video_url }}",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file",
+                "outputPropertyName": "={{ $json.VideoID }}"
+              }
+            }
+          }
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2440,
+          1920
+        ],
+        "id": "b5c49fb4-3638-4023-9d46-668eabcb9a9e",
+        "name": "Get Video"
+      },
+      {
+        "parameters": {
+          "fileSelector": "=/Users/jaiminpatel/Desktop/output/{{ $json.VideoID }}.mp4",
+          "options": {
+            "dataPropertyName": "data"
+          }
+        },
+        "type": "n8n-nodes-base.readWriteFile",
+        "typeVersion": 1,
+        "position": [
+          3040,
+          1920
+        ],
+        "id": "8e96b3a0-6270-4f1d-acee-7ceb7417f070",
+        "name": "Read File from Disk"
+      },
+      {
+        "parameters": {
+          "operation": "write",
+          "fileName": "=/Users/jaiminpatel/Desktop/Raw/{{ $json.VideoID }}.mp4",
+          "dataPropertyName": "={{ $json.VideoID }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.readWriteFile",
+        "typeVersion": 1,
+        "position": [
+          2640,
+          1920
+        ],
+        "id": "8d9e8f9c-7fca-44fc-80f2-77ca7b1c1efb",
+        "name": "Write Files To Disk"
+      },
+      {
+        "parameters": {
+          "command": "=cd ~/Desktop/raw && \\\nffmpeg -i  {{ $json.VideoID }}.mp4 -i ~/Desktop/subway.mp4 \\\n-filter_complex \"[0:v]scale=1080:960[avatar];[1:v]scale=1080:960[subway];[avatar][subway]vstack=inputs=2[v]\" \\\n-map \"[v]\" -map 0:a -t 55 -c:v libx264 -c:a aac -b:a 192k -shortest ~/Desktop/output/{{ $json.VideoID }}.mp4"
+        },
+        "type": "n8n-nodes-base.executeCommand",
+        "typeVersion": 1,
+        "position": [
+          2840,
+          1920
+        ],
+        "id": "3f9a7c2a-9272-4236-a56d-141e46df1faf",
+        "name": "Stack Videos"
+      },
+      {
+        "parameters": {
+          "content": "## Upload Video\nIt would upload video to YT and give confimation through email\n",
+          "height": 320,
+          "width": 520
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          3580,
+          1780
+        ],
+        "id": "79c9afbc-6a07-439c-a452-abfebb0c2242",
+        "name": "Sticky Note1"
+      },
+      {
+        "parameters": {
+          "content": "## Requirements\n\n1. n8n – npm install n8n -g (or use Docker/Cloud setup)\n\n2. OpenAI – OpenAI API Key\n\n3. yt-dlp – brew install yt-dlp\n\n4. Google Sheets – Google Client ID / Google Client Secret\n\n5. Google Form – Linked to Google Sheet\n\n6. HeyGen – HeyGen API Key\n\n7. FFmpeg – brew install ffmpeg\n\n8. YouTube – Google Client ID / Google Client Secret\n\n9. Gmail – Google Client ID / Google Client Secret\n\n",
+          "height": 500,
+          "width": 440,
+          "color": 3
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          1140,
+          -360
+        ],
+        "id": "ba102d17-5bff-40ca-8207-59dc8680f5e6",
+        "name": "Sticky Note7"
+      },
+      {
+        "parameters": {
+          "content": "# Before Starting",
+          "height": 80,
+          "width": 280
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          620,
+          -540
+        ],
+        "id": "e68e4f58-af01-4a09-9274-06dc139f1ddd",
+        "name": "Sticky Note8"
+      },
+      {
+        "parameters": {
+          "content": "## File Management Instructions\nFree up space in your Downloads folder by removing unnecessary files.\n\nCreate a folder named\n### raw \nand \n### output\non your Desktop for better organization and output management.\n\n",
+          "height": 360,
+          "width": 300,
+          "color": 3
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          780,
+          -360
+        ],
+        "id": "d8a1f52e-d29e-44bf-9522-cdd19a81494c",
+        "name": "Sticky Note9"
+      },
+      {
+        "parameters": {
+          "content": "##  Setup Instructions for Video Automation Workflow in n8n\nEstimated Time per Video: 20 minutes (automatically uploads to YouTube and sends a confirmation email).\n### Pre-Setup Requirements:\nDo the Instruction shown on right side\n### API Keys & Credentials Setup:\nOpenAI: Enter API Key in the nodes: Send to Whisper, Video Editor, Translator, Image Promptor, DALL.E Request. To add, click on “Add Credentials” in each node and enter the API key.\nHeyGen: Enter your HeyGen API key in the node named Sending Request. To add, click on “Add Credentials” in the HTTP node and enter the key.\n### Google Sheets Setup:\nCreate a web client in Google Cloud Console to get Client ID and Client Secret.\nEnter these credentials in the following nodes: Extracting Video URLs, Upload Transcript/Description, Upload Segments, Upload Image, Upload Video.\n### Google Forms Setup:\nCreate a new Google Form and link it to a new Google Sheet for data collection.\n### YouTube and Gmail Credentials:\nEnter Client ID and Client Secret for YouTube and Gmail in the respective nodes.\n### Nodes for API Keys:\nOpenAI Nodes: Send to Whisper, Video Editor, Translator, Image Promptor, DALL.E Request.\nHeyGen Node: Sending Request (use HTTP node to add the API key).",
+          "height": 540,
+          "width": 940,
+          "color": 6
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          -240,
+          -360
+        ],
+        "id": "08dbd666-e924-460c-a23c-90b726935a61",
+        "name": "Sticky Note11"
+      }
+    ],
+    "connections": {
+      "Video Editor": {
+        "main": [
+          [
+            {
+              "node": "Translator",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Translator": {
+        "main": [
+          [
+            {
+              "node": "Extract Segment Data",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "YouTube": {
+        "main": [
+          [
+            {
+              "node": "Gmail",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extracting Video urls": {
+        "main": [
+          [
+            {
+              "node": "Switch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch": {
+        "main": [
+          [
+            {
+              "node": "Extract YouTube ID",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Get Insta Details",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send to Wishper": {
+        "main": [
+          [
+            {
+              "node": "Upload Caption/Description",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Extracting Video urls",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download Audio": {
+        "main": [
+          [
+            {
+              "node": "Send to Wishper",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract YouTube ID": {
+        "main": [
+          [
+            {
+              "node": "Download Video",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download Video": {
+        "main": [
+          [
+            {
+              "node": "30s",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "30s": {
+        "main": [
+          [
+            {
+              "node": "Extract Audio ",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract Audio ": {
+        "main": [
+          [
+            {
+              "node": "Send to wishper",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send to wishper": {
+        "main": [
+          [
+            {
+              "node": "Upload Transcript/Description",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload Transcript/Description": {
+        "main": [
+          [
+            {
+              "node": "Video Editor",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract Segment Data": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload Segments": {
+        "main": [
+          [
+            {
+              "node": "Clean Title Path",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Insta Details": {
+        "main": [
+          [
+            {
+              "node": "Get Caption",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Caption": {
+        "main": [
+          [
+            {
+              "node": "Download Audio",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload Caption/Description": {
+        "main": [
+          [
+            {
+              "node": "Video Editor",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Map Segment Fields",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Edit Fields2": {
+        "main": [
+          [
+            {
+              "node": "Upload Segments",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Image Promptor": {
+        "main": [
+          [
+            {
+              "node": "DALL.E Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Video Editor Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Video Editor",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Video Editor",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Transcription Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Translator",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured_Output": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Translator",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Clean Title Path": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Map Segment Fields": {
+        "main": [
+          [
+            {
+              "node": "Image Promptor",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Image Prompter Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Image Promptor",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "DALL.E Request": {
+        "main": [
+          [
+            {
+              "node": "Set Video Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set Video Fields": {
+        "main": [
+          [
+            {
+              "node": "Upload Image",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload Image": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Field Mapper",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Field Mapper": {
+        "main": [
+          [
+            {
+              "node": "Combine Segments",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Combine Segments": {
+        "main": [
+          [
+            {
+              "node": "Sending Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Sending Request": {
+        "main": [
+          [
+            {
+              "node": "10 min",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "10 min": {
+        "main": [
+          [
+            {
+              "node": "Getting Video",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Getting Video": {
+        "main": [
+          [
+            {
+              "node": "Upload Video",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload Video": {
+        "main": [
+          [
+            {
+              "node": "Set Video Data",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set Video Data": {
+        "main": [
+          [
+            {
+              "node": "Get Video",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Video": {
+        "main": [
+          [
+            {
+              "node": "Write Files To Disk",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Read File from Disk": {
+        "main": [
+          [
+            {
+              "node": "YouTube",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Write Files To Disk": {
+        "main": [
+          [
+            {
+              "node": "Stack Videos",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Stack Videos": {
+        "main": [
+          [
+            {
+              "node": "Read File from Disk",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {},
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "484e3a94c43663660d06c869af2991d18265241d973877b91a2df803f458dc96"
+    }
+  }
